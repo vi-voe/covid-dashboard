@@ -1,11 +1,13 @@
 import './container.scss';
 
 class Container {
+  constructor() {
+    this.main = document.createElement('main');
+    this.main.classList.add('container');
+  }
+
   render() {
-    const main = document.createElement('main');
-    main.classList.add('container');
-    const body = document.querySelector('body');
-    body.appendChild(main)
+    document.querySelector('body').appendChild(this.main);
   }
 }
 
