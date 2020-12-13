@@ -1,5 +1,5 @@
-import Container from '../components/container/container.js';
+import Container from '../components/container/container';
 
-//render container
+// render container
 const container = new Container();
 container.render();
