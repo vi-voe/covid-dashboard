@@ -51,3 +51,6 @@ class Data {
   }
 }
 
+
+let newData = new Data();
+console.log(newData.lastDayCount())
