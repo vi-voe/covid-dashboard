@@ -1,4 +1,5 @@
 export class Data {
+
   constructor() {
   }
   static async getData(value) {
@@ -8,6 +9,7 @@ export class Data {
     return await resultData[value]
 
   }
+  
   static async getPromiseValue(mainStatObj, objValue, objValueCountry) {
     let promise = await Promise.resolve(Data.getData(mainStatObj));
     if(objValueCountry !== undefined) {
@@ -115,3 +117,4 @@ export class Data {
     return await Data.getPromiseValue(`Countries`, numCountry, 'Date')
   }
 }
+
