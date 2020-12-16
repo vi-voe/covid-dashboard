@@ -1,6 +1,6 @@
 const path = require('path');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
-const {CleanWebpackPlugin} = require('clean-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const OptimizeCssAssetWebpackPlugin = require('optimize-css-assets-webpack-plugin');
@@ -10,19 +10,19 @@ const ImageminPlugin = require('imagemin-webpack');
 const isDev = process.env.NODE_ENV === 'development';
 const isProd = !isDev;
 
-const filename = (ext) => isDev ? `[name].${ext}` : `[name].[contenthash].${ext}`;
+const filename = (ext) => (isDev ? `[name].${ext}` : `[name].[contenthash].${ext}`);
 
 const optimization = () => {
   const configObj = {
     splitChunks: {
-      chunks: 'all'
-    }
+      chunks: 'all',
+    },
   };
 
   if (isProd) {
     configObj.minimizer = [
       new OptimizeCssAssetWebpackPlugin(),
-      new TerserWebpackPlugin()
+      new TerserWebpackPlugin(),
     ];
   }
 
@@ -37,17 +37,17 @@ const plugins = () => {
       title: 'COVID Dashboard',
       description: 'COVID Dashboard',
       minify: {
-        collapseWhitespace: isProd
-      }
+        collapseWhitespace: isProd,
+      },
     }),
     new CleanWebpackPlugin(),
     new MiniCssExtractPlugin({
-      filename: `./css/${filename('css')}`
+      filename: `./css/${filename('css')}`,
     }),
     new CopyWebpackPlugin({
       patterns: [
-        {from: path.resolve(__dirname, 'src/assets') , to: path.resolve(__dirname, 'app')}
-      ]
+        { from: path.resolve(__dirname, 'src/assets'), to: path.resolve(__dirname, 'app') },
+      ],
     }),
   ];
 
@@ -58,23 +58,23 @@ const plugins = () => {
         cache: true,
         imageminOptions: {
           plugins: [
-            ["gifsicle", { interlaced: true }],
-            ["jpegtran", { progressive: true }],
-            ["optipng", { optimizationLevel: 5 }],
+            ['gifsicle', { interlaced: true }],
+            ['jpegtran', { progressive: true }],
+            ['optipng', { optimizationLevel: 5 }],
             [
-              "svgo",
+              'svgo',
               {
                 plugins: [
                   {
-                    removeViewBox: false
-                  }
-                ]
-              }
-            ]
-          ]
-        }
-      })
-    )
+                    removeViewBox: false,
+                  },
+                ],
+              },
+            ],
+          ],
+        },
+      }),
+    );
   }
 
   return basePlugins;
@@ -87,7 +87,7 @@ module.exports = {
   output: {
     filename: `./js/${filename('js')}`,
     path: path.resolve(__dirname, 'app'),
-    publicPath: ''
+    publicPath: '',
   },
   devServer: {
     historyApiFallback: true,
@@ -112,10 +112,10 @@ module.exports = {
           {
             loader: MiniCssExtractPlugin.loader,
             options: {
-              hmr: isDev
+              hmr: isDev,
             },
           },
-          'css-loader'
+          'css-loader',
         ],
       },
       {
@@ -124,13 +124,11 @@ module.exports = {
           {
             loader: MiniCssExtractPlugin.loader,
             options: {
-              publicPath: (resourcePath, context) => {
-                return path.relative(path.dirname(resourcePath), context) + '/';
-              },
-            }
+              publicPath: (resourcePath, context) => `${path.relative(path.dirname(resourcePath), context)}/`,
+            },
           },
           'css-loader',
-          'sass-loader'
+          'sass-loader',
         ],
       },
       {
@@ -143,8 +141,8 @@ module.exports = {
         use: [{
           loader: 'file-loader',
           options: {
-            name: `./img/${filename('[ext]')}`
-          }
+            name: `./img/${filename('[ext]')}`,
+          },
         }],
       },
       {
@@ -152,10 +150,21 @@ module.exports = {
         use: [{
           loader: 'file-loader',
           options: {
-            name: `./fonts/${filename('[ext]')}`
-          }
+            name: `./fonts/${filename('[ext]')}`,
+          },
         }],
-      }
-    ]
-  }
+      },
+      {
+        test: /.(js|jsx)$/,
+        exclude: /node_modules/,
+        use: [{
+          loader: 'babel-loader',
+          options: {
+            cacheDirectory: true,
+            plugins: ['@babel/plugin-transform-runtime'],
+          },
+        }],
+      },
+    ],
+  },
 };
