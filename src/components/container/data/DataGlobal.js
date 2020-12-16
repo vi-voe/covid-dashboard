@@ -30,5 +30,24 @@ class Data {
   async totalRecoveredBy100K() {
     return await Data.getPromiseValue('Global', 'TotalRecovered').then(res => Math.round(res / 7827000000 * 100000))
   }
+
+  async lastDayCount() {
+    return await Data.getPromiseValue('Global', 'NewConfirmed')
+  }
+  async lastDayDeaths() {
+    return await Data.getPromiseValue('Global', 'NewDeaths')
+  }
+  async lastDayRecovered() {
+    return await Data.getPromiseValue('Global', 'NewRecovered')
+  }
+  async lastDayCountBy100K() {
+    return await Data.getPromiseValue('Global', 'NewConfirmed').then(res => Math.round(res / 7827000000 * 100000))
+  }
+  async lastDayDeathsBy100K() {
+    return await Data.getPromiseValue('Global', 'NewDeaths').then(res => Math.round(res / 7827000000 * 100000))
+  }
+  async lastDayRecoveredBy100K() {
+    return await Data.getPromiseValue('Global', 'NewRecovered').then(res => Math.round(res / 7827000000 * 100000))
+  }
 }
 
