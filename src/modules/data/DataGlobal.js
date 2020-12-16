@@ -9,7 +9,14 @@ export class Data {
     return await resultData[value]
 
   }
-  
+
+  static async getPopulationAndFlag(name) {
+    let url = 'https://restcountries.eu/rest/v2/all?fields=name;population;flag';
+    let response = await fetch(url);
+    let resultData = await response.json();
+    return await resultData.filter((el) => el.name === name)
+  }
+
   static async getPromiseValue(mainStatObj, objValue, objValueCountry) {
     let promise = await Promise.resolve(Data.getData(mainStatObj));
     if(objValueCountry !== undefined) {
@@ -72,13 +79,33 @@ export class Data {
     return await Data.getPromiseValue(`Countries`, numCountry, 'TotalRecovered')
   }
   async globalCountBy100KByCountry(numCountry) {
-    return await Data.getPromiseValue(`Countries`, numCountry, 'TotalConfirmed').then(res => Math.round(res / 7827000000 * 100000))
+    return await Data.getPromiseValue(`Countries`, numCountry, 'TotalConfirmed')
+    .then(() => this.getCountry(numCountry))
+    .then(res=>Data.getPopulationAndFlag(res))
+    .then(async res => {
+      return await Data.getPromiseValue(`Countries`, numCountry, 'TotalConfirmed')
+            .then(countCovid => Math.round( countCovid / res[0].population * 100000))
+
+    })
   }
   async totalDeathsBy100KByCountry(numCountry) {
-    return await Data.getPromiseValue(`Countries`, numCountry, 'TotalDeaths').then(res => Math.round(res / 7827000000 * 100000))
+    return await Data.getPromiseValue(`Countries`, numCountry, 'TotalDeaths')
+    .then(() => this.getCountry(numCountry))
+    .then(res=>Data.getPopulationAndFlag(res))
+    .then(async res => {
+      return await Data.getPromiseValue(`Countries`, numCountry, 'TotalDeaths')
+            .then(countCovid => Math.round( countCovid / res[0].population * 100000))
+
+    })
   }
   async totalRecoveredBy100KByCountry(numCountry) {
-    return await Data.getPromiseValue(`Countries`, numCountry, 'TotalRecovered').then(res => Math.round(res / 7827000000 * 100000))
+    return await Data.getPromiseValue(`Countries`, numCountry, 'TotalRecovered')
+    .then(() => this.getCountry(numCountry))
+    .then(res=>Data.getPopulationAndFlag(res))
+    .then(async res => {
+      return await Data.getPromiseValue(`Countries`, numCountry, 'TotalRecovered')
+            .then(countCovid => Math.round( countCovid / res[0].population * 100000))
+    })
   }
 
   //last day stat by country
@@ -93,16 +120,34 @@ export class Data {
     return await Data.getPromiseValue(`Countries`, numCountry, 'NewRecovered')
   }
   async lastDayGlobalCountBy100KByCountry(numCountry) {
-    return await Data.getPromiseValue(`Countries`, numCountry, 'NewConfirmed').then(res => Math.round(res / 7827000000 * 100000))
+    return await Data.getPromiseValue(`Countries`, numCountry, 'NewConfirmed')
+    .then(() => this.getCountry(numCountry))
+    .then(res=>Data.getPopulationAndFlag(res))
+    .then(async res => {
+      return await Data.getPromiseValue(`Countries`, numCountry, 'NewConfirmed')
+            .then(countCovid => Math.round( countCovid / res[0].population * 100000))
+    })
   }
   async lastDayTotalDeathsBy100KByCountry(numCountry) {
-    return await Data.getPromiseValue(`Countries`, numCountry, 'NewDeaths').then(res => Math.round(res / 7827000000 * 100000))
+    return await Data.getPromiseValue(`Countries`, numCountry, 'NewDeaths')
+    .then(() => this.getCountry(numCountry))
+    .then(res=>Data.getPopulationAndFlag(res))
+    .then(async res => {
+      return await Data.getPromiseValue(`Countries`, numCountry, 'NewDeaths')
+            .then(countCovid => Math.round( countCovid / res[0].population * 100000))
+    })
   }
   async lastDayTotalRecoveredBy100KByCountry(numCountry) {
-    return await Data.getPromiseValue(`Countries`, numCountry, 'NewRecovered').then(res => Math.round(res / 7827000000 * 100000))
+    return await Data.getPromiseValue(`Countries`, numCountry, 'NewRecovered')
+    .then(() => this.getCountry(numCountry))
+    .then(res=>Data.getPopulationAndFlag(res))
+    .then(async res => {
+      return await Data.getPromiseValue(`Countries`, numCountry, 'NewRecovered')
+            .then(countCovid => Math.round( countCovid / res[0].population * 100000))
+    })
   }
 
-  //other info (country, country code, slug, date)
+  //other info (country, country code, slug, date, flag)
 
   async getCountry(numCountry) {
     return await Data.getPromiseValue(`Countries`, numCountry, 'Country')
@@ -116,5 +161,8 @@ export class Data {
   async getDate(numCountry) {
     return await Data.getPromiseValue(`Countries`, numCountry, 'Date')
   }
+  async getFlag(numCountry) {
+    return await this.getCountry(numCountry).then((res)=>Data.getPopulationAndFlag(res))
+    .then(res=>res[0].flag)
+  }
 }
-
