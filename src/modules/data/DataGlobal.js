@@ -53,6 +53,22 @@ class Data {
     return this.totalRecoveredBy100KResult;
   }
 
+  // global historical stat
+
+  async getDataTotalCasesGlobalHistorical() {
+    const url = 'https://disease.sh/v3/covid-19/historical/all?lastdays=366';
+    const response = await fetch(url);
+    this.resultData = await response.json();
+    return this.resultData;
+  }
+
+  async getDataTotalCasesCountryHistorical(value) {
+    const url = `https://disease.sh/v3/covid-19/historical/${value}?lastdays=366`;
+    const response = await fetch(url);
+    this.resultData = await response.json();
+    return this.resultData;
+  }
+
   // stat by last day
 
   async lastDayCount() {
