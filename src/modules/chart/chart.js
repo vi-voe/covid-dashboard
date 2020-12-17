@@ -5,9 +5,9 @@ class ChartPainter {
     this.canvas = canvasChart;
     this.data = new Data();
 
-    this.group = 'cases';
-    this.countMethod = 'ABS';
-    this.period = 'total';
+    this.group = 'cases'; // cases, deaths? recovered
+    this.countMethod = 'ABS'; // abs, 100thousand
+    this.period = 'total'; // total, day
 
     this.peopleWorld = 7827000000;
 
@@ -73,8 +73,11 @@ class ChartPainter {
   async getDataForChart() {
     const dataChartArray = [];
     await this.data.getDataTotalCasesGlobalHistorical().then((res) => {
+      let prev = 0;
       Object.entries(res[this.group]).forEach((pair) => {
-        const people = (this.countMethod === 'ABS') ? pair[1] : Math.round((pair[1] * 100000) / this.peopleWorld);
+        let people = (this.period === 'total') ? pair[1] : pair[1] - prev;
+        prev = pair[1];
+        people = (this.countMethod === 'ABS') ? people : Math.round((people * 100000) / this.peopleWorld);
         dataChartArray.push({ t: pair[0].valueOf(), y: people });
       });
     }).catch((error) => console.error(error));

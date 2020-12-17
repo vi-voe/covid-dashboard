@@ -13,6 +13,3 @@ canvasChart.render();
 
 const chartPainter = new ChartPainter(canvasChart);
 chartPainter.render();
-setTimeout(()=>{chartPainter.rerender('countMethod', 'thousend')}, 2000)
-setTimeout(()=>{chartPainter.rerender('group', 'deaths')}, 5000)
-setTimeout(()=>{chartPainter.rerender('countMethod', 'ABS')}, 8000)
