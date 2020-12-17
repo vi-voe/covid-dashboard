@@ -1,28 +1,23 @@
 import Data from '../data/DataGlobal';
 
 class ChartPainter {
-  constructor() {
+  constructor(canvasChart) {
+    this.canvas = canvasChart;
     this.data = new Data();
-  }
 
-  async getDataForChart() {
-    const dataChartArray = [];
-    await this.data.getDataTotalCasesGlobalHistorical().then((res) => {
-      Object.entries(res.cases).forEach((pair) => {
-        dataChartArray.push({ t: pair[0].valueOf(), y: pair[1] });
-      });
-    }).catch((error) => console.error(error));
-    return dataChartArray;
-  }
+    this.group = 'cases';
+    this.countMethod = 'ABS';
+    this.period = 'total';
 
-  initChart(canvasChart, dataResult) {
+    this.peopleWorld = 7827000000;
+
     this.cfg = {
       data: {
         datasets: [{
           label: 'People: ',
           backgroundColor: '#ffe35c',
           borderColor: '#ffe35c',
-          data: dataResult,
+          data: [],
           type: 'bar',
           pointRadius: 0,
           fill: false,
@@ -72,11 +67,33 @@ class ChartPainter {
         },
       },
     };
-    this.chart = new Chart(canvasChart.canvas.getContext('2d'), this.cfg);
+    this.chart = new Chart(this.canvas.canvas.getContext('2d'), this.cfg);
   }
 
-  paint(canvasChart) {
-    this.getDataForChart().then((dataResult) => this.initChart(canvasChart, dataResult));
+  async getDataForChart() {
+    const dataChartArray = [];
+    await this.data.getDataTotalCasesGlobalHistorical().then((res) => {
+      Object.entries(res[this.group]).forEach((pair) => {
+        const people = (this.countMethod === 'ABS') ? pair[1] : Math.round((pair[1] * 100000) / this.peopleWorld);
+        dataChartArray.push({ t: pair[0].valueOf(), y: people });
+      });
+    }).catch((error) => console.error(error));
+    return dataChartArray;
+  }
+
+  updateChart(dataResult) {
+    this.cfg.data.datasets[0].data = dataResult;
+    this.cfg.data.datasets[0].label = `People ${this.group}`;
+    this.chart.update();
+  }
+
+  render() {
+    this.getDataForChart().then((dataResult) => this.updateChart(dataResult));
+  }
+
+  rerender(state, value) {
+    this[state] = value;
+    this.render();
   }
 }
 
