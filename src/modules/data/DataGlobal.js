@@ -1,22 +1,54 @@
 class Data {
   static async getData(value) {
-    const url = 'https://api.covid19api.com/summary';
-    const response = await fetch(url);
+    this.requestOptions = {
+      Server: 'nginx/1.14.0 (Ubuntu)',
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Transfer-Encoding': 'chunked',
+      Connection: 'keep-alive',
+      'Access-Control-Allow-Credentials': true,
+      'Access-Control-Expose-Headers': 'Content-Length',
+      'Content-Encoding': 'gzip',
+      'Strict-Transport-Security': 'max-age=5184000; includeSubDomains',
+      Vary: 'Origin',
+      'X-Content-Type-Options': 'nosniff',
+      'X-Dns-Prefetch-Control': 'off',
+      'X-Download-Options': 'noopen',
+      'X-Frame-Options': 'DENY',
+      'X-Rate-Limit-Duration': 1,
+      'X-Rate-Limit-Limit': 3.00,
+      'X-Rate-Limit-Request-Remote-Addr': '127.0.0.1:60412',
+      'X-Request-Id': '0ea87bc5-7d92-416c-84c7-94028b7c7de2',
+      'X-Xss-Protection': '1; mode=block',
+      'X-Access-Token': '5cf9dfd5-3449-485e-b5ae-70a60e997864',
+    };
+    const url = 'https://api.covid19api.com/summary?apikey=5cf9dfd5-3449-485e-b5ae-70a60e997864';
+    const response = await fetch(url, this.requestOptions);
     const resultData = await response.json();
     return resultData[value];
   }
 
-  static async getPopulationAndFlag(name) {
+  static async getPopulationAndFlag(name, allCountry) {
     const url = 'https://restcountries.eu/rest/v2/all?fields=name;population;flag';
-    const response = await fetch(url);
+    const response = await fetch(url, this.requestOptions);
     const resultData = await response.json();
+    if (allCountry === 'All') {
+      return resultData.filter((el) => el.name === name).map((res) => res.flag);
+    }
     return resultData.filter((el) => el.name === name);
   }
 
   static async getPromiseValue(mainStatObj, objValue, objValueCountry) {
     const promise = await Promise.resolve(Data.getData(mainStatObj));
-    if (objValueCountry !== undefined) {
+    if (objValueCountry !== undefined && objValue !== 'All') {
       return promise[objValue][objValueCountry];
+    }
+    if (objValue === 'All') {
+      if (objValueCountry === undefined) {
+        return promise;
+      }
+      if (objValueCountry !== undefined) {
+        return promise.map((e) => e[objValueCountry]);
+      }
     }
     return promise[objValue];
   }
@@ -215,7 +247,7 @@ class Data {
   }
 
   async getCountrySlug(numCountry) {
-    this.getCountrySlugResult = await Data.getPromiseValue('Countries', numCountry, 'CountryCode');
+    this.getCountrySlugResult = await Data.getPromiseValue('Countries', numCountry, 'Slug');
     return this.getCountrySlugResult;
   }
 
@@ -227,6 +259,33 @@ class Data {
   async getFlag(numCountry) {
     this.getFlagResult = await this.getCountry(numCountry)
       .then((res) => Data.getPopulationAndFlag(res)).then((res) => res[0].flag);
+    return this.getFlagResult;
+  }
+
+  async getCountryAllCountries() {
+    this.getCountryAllCountriesResult = await Data.getPromiseValue('Countries', 'All');
+    return this.getCountryAllCountriesResult;
+  }
+
+  async getCountryCodeAllCountries() {
+    this.getCountryCodeAllCountriesResult = await Data.getPromiseValue('Countries', 'All', 'CountryCode');
+    return this.getCountryCodeAllCountriesResult;
+  }
+
+  async getCountrySlugAllCountries() {
+    this.getCountrySlugAllCountriesResult = await Data.getPromiseValue('Countries', 'All', 'Slug');
+    return this.getCountrySlugAllCountriesResult;
+  }
+
+  async getDateAllCountries() {
+    this.getDateAllCountriesResult = await Data.getPromiseValue('Countries', 'All', 'Date');
+    return this.getDateAllCountriesResult;
+  }
+
+  async getFlagAllCountries() {
+    this.getFlagResult = await this.getCountryAllCountries()
+      .then((result) => result.map((res) => Data.getPopulationAndFlag(res.Country, 'All')))
+      .then((res) => res);
     return this.getFlagResult;
   }
 }
