@@ -1,33 +1,69 @@
 import './table.scss';
+import tableHeader from './var';
 import Data from '../../modules/data/DataGlobal';
+
+let selectedList;
 
 class Table {
   constructor() {
-    this.table = document.createElement('table');
-    this.table.classList.add('table');
+    this.wrapper = document.createElement('div');
+    this.wrapper.classList.add('list_wrap');
+    this.list = document.createElement('ul');
+    this.list.classList.add('list');
+
+    const listHeader = document.createElement('h2');
+    listHeader.classList.add('list__header');
+    this.wrapper.appendChild(listHeader);
+    const textContent = document.createTextNode(tableHeader);
+    listHeader.appendChild(textContent);
+
+    document.querySelector('.container').appendChild(this.wrapper);
   }
 
   render() {
-    return document.body.appendChild(this.table);
+    return this.wrapper.appendChild(this.list);
   }
 
-  async getData() {
+  initListItem() {
+    const list = this.render();
+    const li = document.createElement('li');
+    li.classList.add('list__item');
+    return list.appendChild(li);
+  }
+
+  async initTableList() {
     this.data = new Data();
-    const allContries = await this.data.globalCountries();
-    // for (let index = 0; index < 1; index += 1) {
-    //   const x = await this.data.globalCountByCountry(index);
-    //   const y = await this.data.getCountry(index);
-    //   console.log(x, y);
-    // }
-    return allContries;
+    const allContries = await this.data.getCountryAllCountries();
+    Object.values(allContries).forEach((item) => {
+      const list = this.initListItem();
+      const span = document.createElement('span');
+      list.appendChild(span);
+      const Country = document.createTextNode(item.Country.toUpperCase());
+      const TotalConfirmed = document.createTextNode(item.TotalConfirmed);
+      list.appendChild(Country);
+      span.appendChild(TotalConfirmed);
+    });
+    this.choiceLine();
   }
 
-  async countriesList() {
-    const countriesList = await this.getData();
-    console.log(countriesList)
+  choiceLine() {
+    const list = this.render();
+    list.addEventListener('click', (event) => {
+      const { target } = event;
+      if (target.tagName !== 'LI') return;
+      this.highlight(target);
+    });
+  }
 
-    const table = this.render();
-    console.log(table);
+  // eslint-disable-next-line class-methods-use-this
+  highlight(td) {
+    if (selectedList) {
+      selectedList.classList.remove('list-active');
+    }
+    selectedList = td;
+    // eslint-disable-next-line no-console
+    console.log(selectedList);
+    selectedList.classList.add('list-active');
   }
 }
 
