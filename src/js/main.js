@@ -12,8 +12,8 @@ container.render();
 const canvasChart = new CanvasChart();
 canvasChart.render();
 
-const chartPainter = new ChartPainter();
-chartPainter.paint(canvasChart);
+const chartPainter = new ChartPainter(canvasChart);
+chartPainter.render();
 
 // table
 const table = new Table();
