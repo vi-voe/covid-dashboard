@@ -6,8 +6,8 @@ class ChartPainter {
     this.data = new Data();
 
     this.group = 'cases'; // cases, deaths? recovered
-    this.countMethod = 'ABS'; // abs, 100thousand
-    this.period = 'total'; // total, day
+    this.countMethod = 'true'; // abs, 100thousand
+    this.period = 'true'; // total, day
 
     this.peopleWorld = 7827000000;
 
@@ -15,8 +15,8 @@ class ChartPainter {
       data: {
         datasets: [{
           label: 'People: ',
-          backgroundColor: '#ffe35c',
-          borderColor: '#ffe35c',
+          backgroundColor: '#E5BD47',
+          borderColor: '#E5BD47',
           data: [],
           type: 'bar',
           pointRadius: 0,
@@ -48,6 +48,7 @@ class ChartPainter {
           yAxes: [{
             ticks: {
               beginAtZero: true,
+              callback: (value) => (value > 99000) ? `${value / 10e6}M` : value,
             },
           }],
         },
@@ -75,12 +76,13 @@ class ChartPainter {
     await this.data.getDataTotalCasesGlobalHistorical().then((res) => {
       let prev = 0;
       Object.entries(res[this.group]).forEach((pair) => {
-        let people = (this.period === 'total') ? pair[1] : pair[1] - prev;
+        let people = (this.period === 'true') ? pair[1] : pair[1] - prev;
         prev = pair[1];
-        people = (this.countMethod === 'ABS') ? people : Math.round((people * 100000) / this.peopleWorld);
+        people = (this.countMethod === 'true') ? people : Math.round((people * 100000) / this.peopleWorld);
         dataChartArray.push({ t: pair[0].valueOf(), y: people });
       });
     }).catch((error) => console.error(error));
+
     return dataChartArray;
   }
 

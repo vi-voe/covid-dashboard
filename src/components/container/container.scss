@@ -1,7 +1,40 @@
 @import 'normalize.css';
 
+:root {
+  --color-base: rgba(44, 54, 63, 1);
+  --color-main: #E5BD47;
+  --color-second: #2F6665;
+  --color-text: #DCDCDD;
+  --color-emph: #ca3c38;
+}
+
+* {
+  outline: none;
+}
+
+.container {
+  background-color: var(--color-base);
+  color: var(--color-text);
+  font-family: arial, helvetica, serif;
+  color: var(--color-text);
+}
+
+button {
+  border: none
+}
+
 .container {
   position: relative;
   width: 100%;
   height: 100vh;
+}
+
+.row {
+  height: 50vh;
+  display: flex;
+
+  &>div {
+    flex: 1;
+    padding: 1%;
+  }
 }
