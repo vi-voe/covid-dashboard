@@ -1,6 +1,8 @@
 import './table.scss';
 import tableHeader from './var';
 import Data from '../../modules/data/DataGlobal';
+import Trigger from '../trigger/trigger';
+import Tabs from '../tabs/tabs';
 
 let selectedList;
 
@@ -17,7 +19,21 @@ class Table {
     const textContent = document.createTextNode(tableHeader);
     listHeader.appendChild(textContent);
 
-    document.querySelector('.container').appendChild(this.wrapper);
+    const triggerWrap = document.createElement('div');
+    triggerWrap.classList.add('trigger-wrap');
+
+    this.trigger = new Trigger('trigger3', 'countMethod', ['total', '100k']);
+    this.trigger.render(triggerWrap);
+
+    this.trigger2 = new Trigger('trigger4', 'period', ['total', 'daily']);
+    this.trigger2.render(triggerWrap);
+
+    this.wrapper.appendChild(triggerWrap);
+
+    document.getElementById('bottom').appendChild(this.wrapper);
+
+    this.tabs = new Tabs('group', ['cases', 'deaths', 'recovered']);
+    this.tabs.render(this.wrapper);
   }
 
   render() {
