@@ -1,8 +1,9 @@
 .list_wrap {
   background-color: #222222;
-  max-width: 400px;
+  width: 400px;
   border: 3px solid #5c5c5c;
   border-radius: 10px;
+  margin-bottom: 30px;
 }
 
 .list {
@@ -44,4 +45,9 @@
 }
 .list::-webkit-scrollbar-thumb {
   background-color: #5c5c5c;
+}
+
+.search {
+  margin: 0 10px;
+  width: 360px;
 }
