@@ -11,7 +11,7 @@ container.render();
 
 // table
 const table = new Table();
-table.initTableList();
+table.initTableTotalConfirmed();
 
 // render chart
 const canvasChart = new CanvasChart();
