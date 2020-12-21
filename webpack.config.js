@@ -36,9 +36,10 @@ const plugins = () => {
       filename: 'index.html',
       title: 'COVID Dashboard',
       description: 'COVID Dashboard',
-      minify: {
-        collapseWhitespace: isProd,
-      },
+      minify: false,
+      // {
+      //   collapseWhitespace: isProd,
+      // },
     }),
     new CleanWebpackPlugin(),
     new MiniCssExtractPlugin({
