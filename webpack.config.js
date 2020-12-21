@@ -147,11 +147,11 @@ module.exports = {
         }],
       },
       {
-        test: /\.(?:|woff2)$/,
+        test: /\.(?:|json)$/,
         use: [{
-          loader: 'file-loader',
+          loader: 'json-loader',
           options: {
-            name: `./fonts/${filename('[ext]')}`,
+            name: `./data/${filename('[ext]')}`,
           },
         }],
       },
@@ -165,6 +165,11 @@ module.exports = {
             plugins: ['@babel/plugin-transform-runtime'],
           },
         }],
+      },
+      {
+        test: /\.json$/,
+        enforce: 'pre',
+        loader: 'json',
       },
     ],
   },
