@@ -1,28 +1,23 @@
 import Data from '../data/DataGlobal';
 
 class ChartPainter {
-  constructor() {
+  constructor(canvasChart) {
+    this.canvas = canvasChart;
     this.data = new Data();
-  }
 
-  async getDataForChart() {
-    const dataChartArray = [];
-    await this.data.getDataTotalCasesGlobalHistorical().then((res) => {
-      Object.entries(res.cases).forEach((pair) => {
-        dataChartArray.push({ t: pair[0].valueOf(), y: pair[1] });
-      });
-    }).catch((error) => console.error(error));
-    return dataChartArray;
-  }
+    this.group = 'cases'; // cases, deaths? recovered
+    this.countMethod = 'true'; // abs, 100thousand
+    this.period = 'true'; // total, day
 
-  initChart(canvasChart, dataResult) {
+    this.peopleWorld = 7827000000;
+
     this.cfg = {
       data: {
         datasets: [{
           label: 'People: ',
-          backgroundColor: '#ffe35c',
-          borderColor: '#ffe35c',
-          data: dataResult,
+          backgroundColor: '#E5BD47',
+          borderColor: '#E5BD47',
+          data: [],
           type: 'bar',
           pointRadius: 0,
           fill: false,
@@ -53,6 +48,7 @@ class ChartPainter {
           yAxes: [{
             ticks: {
               beginAtZero: true,
+              callback: (value) => (value > 99000) ? `${value / 10e6}M` : value,
             },
           }],
         },
@@ -72,11 +68,37 @@ class ChartPainter {
         },
       },
     };
-    this.chart = new Chart(canvasChart.canvas.getContext('2d'), this.cfg);
+    this.chart = new Chart(this.canvas.canvas.getContext('2d'), this.cfg);
   }
 
-  paint(canvasChart) {
-    this.getDataForChart().then((dataResult) => this.initChart(canvasChart, dataResult));
+  async getDataForChart() {
+    const dataChartArray = [];
+    await this.data.getDataTotalCasesGlobalHistorical().then((res) => {
+      let prev = 0;
+      Object.entries(res[this.group]).forEach((pair) => {
+        let people = (this.period === 'true') ? pair[1] : pair[1] - prev;
+        prev = pair[1];
+        people = (this.countMethod === 'true') ? people : Math.round((people * 100000) / this.peopleWorld);
+        dataChartArray.push({ t: pair[0].valueOf(), y: people });
+      });
+    }).catch((error) => console.error(error));
+
+    return dataChartArray;
+  }
+
+  updateChart(dataResult) {
+    this.cfg.data.datasets[0].data = dataResult;
+    this.cfg.data.datasets[0].label = `People ${this.group}`;
+    this.chart.update();
+  }
+
+  render() {
+    this.getDataForChart().then((dataResult) => this.updateChart(dataResult));
+  }
+
+  rerender(state, value) {
+    this[state] = value;
+    this.render();
   }
 }
 
