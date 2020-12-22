@@ -26,8 +26,8 @@ class Trigger {
         if (!el.dataset[this.datasetName]) return;
         el.classList.toggle('trigger--on');
         el.innerHTML = this.text[this.ind];
+        el.dataset[this.datasetName] = el.dataset[this.datasetName] != 'true';
       });
-    this.main.dataset[this.datasetName] = this.main.dataset[this.datasetName] != 'true';
     publisher.notify(this.datasetName, this.main.dataset[this.datasetName]);
   }
 }

@@ -24,7 +24,7 @@ class TableGlobalDeath {
       globalDeath.appendChild(globalDeathTextContent);
     });
 
-    document.querySelector('.container').appendChild(this.wrapper);
+    // document.querySelector('.container').appendChild(this.wrapper);
   }
 
   render() {
