@@ -1,8 +1,11 @@
 import Container from '../components/container/container';
 import CanvasChart from '../components/chart/chart';
+
 import List from '../components/list/list';
+import TableCommon from '../components/table_common/table_common';
 
 import ChartPainter from '../modules/chart/chart';
+import TableList from '../modules/tableList/tableList';
 import { publisher } from '../modules/observer/publisher';
 
 // render container
@@ -24,6 +27,18 @@ publisher.subscribe(chartPainter, "group");
 publisher.subscribe(chartPainter, "countMethod");
 publisher.subscribe(chartPainter, "period");
 
+<<<<<<< HEAD
 publisher.subscribe(list, "group");
 publisher.subscribe(list, "countMethod");
 publisher.subscribe(list, "period");
+=======
+// table common
+const tableCommon = new TableCommon();
+tableCommon.render();
+
+const tableList = new TableList(tableCommon);
+tableList.render();
+
+publisher.subscribe(tableList, "countMethod");
+publisher.subscribe(tableList, "period");
+>>>>>>> develop

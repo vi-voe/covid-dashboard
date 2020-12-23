@@ -88,7 +88,7 @@ class ChartPainter {
 
   updateChart(dataResult) {
     this.cfg.data.datasets[0].data = dataResult;
-    this.cfg.data.datasets[0].label = `People ${this.group}`;
+    this.cfg.data.datasets[0].label = `People ${this.group} ${(this.countMethod === 'true') ? 'absolute value' : 'per 100th population'} ${(this.period === 'true') ? 'for a pandemic' : 'for a day'}`;
     this.chart.update();
   }
 
