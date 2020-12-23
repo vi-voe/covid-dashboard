@@ -147,11 +147,15 @@ module.exports = {
         }],
       },
       {
-        test: /\.(?:|json)$/,
+
+        test: /\.(?:|mp3)$/,
+
         use: [{
           loader: 'json-loader',
           options: {
-            name: `./data/${filename('[ext]')}`,
+
+            name: `./assets/sounds/${filename('[ext]')}`,
+
           },
         }],
       },
