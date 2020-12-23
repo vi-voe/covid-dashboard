@@ -4,7 +4,12 @@
 }
 
 #mapContainer {
-  height: calc(100% - 40px);
+  box-sizing: border-box;
+  height: calc(100% - 10px);
   width: 100%;
   max-width: calc(100vw - 40px);
+
+  .tabs {
+    margin-top: 10px;
+  }
 }
