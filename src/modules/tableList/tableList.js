@@ -9,6 +9,7 @@ class TableList {
 
     this.countMethod = 'true'; // abs, 100thousand
     this.period = 'true'; // total, day
+    this.country = '';
   }
 
   async getDataForTable() {
@@ -24,6 +25,7 @@ class TableList {
     <th>Recovered</th>
   `;
     Object.values(res).forEach((item) => {
+      if (this.country.length > 0 && item.Country.toLowerCase() !== this.country.toLowerCase()) return;
       const tr = document.createElement('tr');
       const confirmed = (this.period === 'true') ? item.TotalConfirmed : item.NewConfirmed;
       const deaths = (this.period === 'true') ? item.TotalDeaths : item.NewDeaths;

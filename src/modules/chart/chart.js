@@ -8,7 +8,7 @@ class ChartPainter {
     this.group = 'cases'; // cases, deaths? recovered
     this.countMethod = 'true'; // abs, 100thousand
     this.period = 'true'; // total, day
-
+    this.country = '';
     this.peopleWorld = 7827000000;
 
     this.cfg = {
@@ -48,7 +48,7 @@ class ChartPainter {
           yAxes: [{
             ticks: {
               beginAtZero: true,
-              callback: (value) => (value > 99000) ? `${value / 10e6}M` : value,
+              callback: (value) => ((value > 99000) ? `${value / 10e6}M` : value),
             },
           }],
         },
@@ -73,22 +73,34 @@ class ChartPainter {
 
   async getDataForChart() {
     const dataChartArray = [];
-    await this.data.getDataTotalCasesGlobalHistorical().then((res) => {
-      let prev = 0;
-      Object.entries(res[this.group]).forEach((pair) => {
-        let people = (this.period === 'true') ? pair[1] : pair[1] - prev;
-        prev = pair[1];
-        people = (this.countMethod === 'true') ? people : Math.round((people * 100000) / this.peopleWorld);
-        dataChartArray.push({ t: pair[0].valueOf(), y: people });
-      });
-    }).catch((error) => console.error(error));
+    if (this.country.length === 0) {
+      await this.data.getDataTotalCasesGlobalHistorical().then((res) => {
+        let prev = 0;
+        Object.entries(res[this.group]).forEach((pair) => {
+          let people = (this.period === 'true') ? pair[1] : pair[1] - prev;
+          prev = pair[1];
+          people = (this.countMethod === 'true') ? people : Math.round((people * 100000) / this.peopleWorld);
+          dataChartArray.push({ t: pair[0].valueOf(), y: people });
+        });
+      }).catch((error) => console.error(error));
+    } else {
+      await this.data.getDataTotalCasesCountryHistorical(this.country).then((res) => {
+        let prev = 0;
+        Object.entries(res.timeline[this.group]).forEach((pair) => {
+          let people = (this.period === 'true') ? pair[1] : pair[1] - prev;
+          prev = pair[1];
+          people = (this.countMethod === 'true') ? people : Math.round((people * 100000) / this.peopleWorld);
+          dataChartArray.push({ t: pair[0].valueOf(), y: people });
+        });
+      }).catch((error) => console.error(error));
+    }
 
     return dataChartArray;
   }
 
   updateChart(dataResult) {
     this.cfg.data.datasets[0].data = dataResult;
-    this.cfg.data.datasets[0].label = `People ${this.group} ${(this.countMethod === 'true') ? 'absolute value' : 'per 100th population'} ${(this.period === 'true') ? 'for a pandemic' : 'for a day'}`;
+    this.cfg.data.datasets[0].label = `People of ${(this.country.length === 0) ? 'world' : this.country } ${this.group} ${(this.countMethod === 'true') ? 'absolute value' : 'per 100th population'} ${(this.period === 'true') ? 'for a pandemic' : 'for a day'}`;
     this.chart.update();
   }
 

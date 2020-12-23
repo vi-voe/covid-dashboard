@@ -26,6 +26,7 @@ chartPainter.render();
 publisher.subscribe(chartPainter, "group");
 publisher.subscribe(chartPainter, "countMethod");
 publisher.subscribe(chartPainter, "period");
+publisher.subscribe(chartPainter, "country");
 
 publisher.subscribe(list, "group");
 publisher.subscribe(list, "countMethod");
@@ -39,3 +40,4 @@ tableList.render();
 
 publisher.subscribe(tableList, "countMethod");
 publisher.subscribe(tableList, "period");
+publisher.subscribe(tableList, "country");
