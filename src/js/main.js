@@ -14,6 +14,13 @@ import Map from '../components/map/map';
 const container = new Container();
 container.render();
 
+// render map
+const map = new Map();
+map.render();
+publisher.subscribe(map, 'group');
+publisher.subscribe(map, 'countMethod');
+publisher.subscribe(map, 'period');
+
 // table
 const list = new List();
 list.initTable('confirmed');
@@ -44,9 +51,3 @@ publisher.subscribe(tableList, "countMethod");
 publisher.subscribe(tableList, "period");
 publisher.subscribe(tableList, "country");
 
-// render map
-const map = new Map();
-map.render();
-publisher.subscribe(map, 'group');
-publisher.subscribe(map, 'countMethod');
-publisher.subscribe(map, 'period');

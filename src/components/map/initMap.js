@@ -34,7 +34,7 @@ function initMap() {
     });
 
     geo.geocode({ address: country.Country }, (results, status) => {
-      // console.log(country,results,status)
+      console.log(country,results,status)
 
       if (status === google.maps.GeocoderStatus.OK) {
         map.setCenter(results[0].geometry.location);
