@@ -2,6 +2,7 @@ import './map.scss';
 import initMap from './initMap';
 import Trigger from '../trigger/trigger';
 import Tabs from '../tabs/tabs';
+import ResizeBtn from '../resize-btn/resizeBtn';
 
 class Map {
   constructor() {
@@ -11,9 +12,13 @@ class Map {
 
     this.mapContainer = document.createElement('div');
     this.mapContainer.id = 'mapContainer';
+    this.mapContainer.classList.add('resize-bl');
 
     this.map = document.createElement('div');
     this.map.id = 'map';
+
+    this.resizeBtn = new ResizeBtn();
+    this.resizeBtn.render(this.mapContainer);
 
     const triggerWrap = document.createElement('div');
     triggerWrap.classList.add('trigger-wrap');
@@ -37,7 +42,7 @@ class Map {
   }
 
   render() {
-    document.querySelector('.container').appendChild(this.mapContainer);
+    document.querySelector('#top').appendChild(this.mapContainer);
     this.mapListener();
   }
 
