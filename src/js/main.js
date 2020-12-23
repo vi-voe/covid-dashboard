@@ -1,6 +1,6 @@
 import Container from '../components/container/container';
 import CanvasChart from '../components/chart/chart';
-import Table from '../components/table/table';
+import List from '../components/list/list';
 
 import ChartPainter from '../modules/chart/chart';
 import { publisher } from '../modules/observer/publisher';
@@ -10,8 +10,8 @@ const container = new Container();
 container.render();
 
 // table
-const table = new Table();
-table.initTableTotalConfirmed();
+const list = new List();
+list.initTable('confirmed');
 
 // render chart
 const canvasChart = new CanvasChart();
@@ -23,3 +23,7 @@ chartPainter.render();
 publisher.subscribe(chartPainter, "group");
 publisher.subscribe(chartPainter, "countMethod");
 publisher.subscribe(chartPainter, "period");
+
+publisher.subscribe(list, "group");
+publisher.subscribe(list, "countMethod");
+publisher.subscribe(list, "period");

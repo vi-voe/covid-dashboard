@@ -146,11 +146,11 @@ module.exports = {
         }],
       },
       {
-        test: /\.(?:|woff2)$/,
+        test: /\.(?:|mp3)$/,
         use: [{
           loader: 'file-loader',
           options: {
-            name: `./fonts/${filename('[ext]')}`,
+            name: `./assets/sounds/${filename('[ext]')}`,
           },
         }],
       },
