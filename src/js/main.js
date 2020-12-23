@@ -27,12 +27,10 @@ publisher.subscribe(chartPainter, "group");
 publisher.subscribe(chartPainter, "countMethod");
 publisher.subscribe(chartPainter, "period");
 
-<<<<<<< HEAD
 publisher.subscribe(list, "group");
 publisher.subscribe(list, "countMethod");
 publisher.subscribe(list, "period");
-=======
-// table common
+
 const tableCommon = new TableCommon();
 tableCommon.render();
 
@@ -41,4 +39,3 @@ tableList.render();
 
 publisher.subscribe(tableList, "countMethod");
 publisher.subscribe(tableList, "period");
->>>>>>> develop
