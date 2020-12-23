@@ -43,7 +43,7 @@ class List {
     // this.TableGD = new TableGlobalDeath();
     // this.TableGD.render();
 
-    document.querySelector('.container').appendChild(this.wrapper);
+    document.querySelector('#top').appendChild(this.wrapper);
     Keyboard.init();
   }
 
@@ -62,7 +62,7 @@ class List {
     this.list.innerHTML = '';
     this.data = new Data();
     const allContries = await this.data.getCountryAllCountries();
-    this.countryName = [];
+
     Object.values(allContries).forEach((item) => {
       const list = this.initListElement();
       const span = document.createElement('span');
@@ -78,7 +78,7 @@ class List {
       };
       const Country = document.createTextNode(item.Country.toUpperCase());
       const TotalConfirmed = document.createTextNode(`${obj[params]}`);
-      this.countryName.push(item.Country);
+
       list.appendChild(Country);
       span.appendChild(TotalConfirmed);
     });
@@ -88,23 +88,20 @@ class List {
   }
 
   async getAllFlags() {
-    const flagArray = [];
+    const flagArray = {};
     const url = 'https://restcountries.eu/rest/v2/all';
     const response = await fetch(url, this.requestOptions);
     const resultData = await response.json();
     resultData.forEach((elem) => {
-      flagArray.push(elem.flag);
+      flagArray[elem.name.toUpperCase()] = elem.flag;
     });
-
     return flagArray;
   }
 
   async setAllFlags() {
-    let i = 0;
     const getFlags = await this.getAllFlags();
     [...this.list.childNodes].forEach((item) => {
-      item.firstChild.nextSibling.setAttribute('src', `${getFlags[i]}`);
-      i += 1;
+      item.firstChild.nextSibling.setAttribute('src', `${getFlags[item.lastChild.textContent]}`);
     });
     this.sortList();
     this.executeSearch();
