@@ -28,3 +28,6 @@ publisher.subscribe(chartPainter, 'period');
 // render map
 const map = new Map();
 map.render();
+publisher.subscribe(map, 'group');
+publisher.subscribe(map, 'countMethod');
+publisher.subscribe(map, 'period');
