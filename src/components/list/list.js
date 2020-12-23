@@ -3,6 +3,8 @@ import tableTitle from './var';
 import Data from '../../modules/data/DataGlobal';
 import Keyboard from '../keyboard/keyboard';
 import Tabs from '../tabs/tabs';
+import ResizeBtn from '../resize-btn/resizeBtn';
+import { publisher } from '../../modules/observer/publisher';
 // import TableGlobalDeath from './TableGlobalDeath';
 
 let selectedList;
@@ -15,13 +17,14 @@ class List {
 
     this.wrapper = document.createElement('div');
     this.wrapper.classList.add('list_wrap');
+    this.wrapper.classList.add('resize-bl');
 
     this.list = document.createElement('ul');
     this.list.classList.add('list');
 
     const listTitle = document.createElement('h2');
     listTitle.classList.add('list__title');
-    this.wrapper.appendChild(listTitle);
+    // this.wrapper.appendChild(listTitle);
 
     this.search = document.createElement('textarea');
     this.search.setAttribute('placeholder', 'Search');
@@ -31,8 +34,11 @@ class List {
     const titleContent = document.createTextNode(tableTitle);
     listTitle.appendChild(titleContent);
 
+    this.resizeBtn = new ResizeBtn();
+    this.resizeBtn.render(this.wrapper);
+
     const triggerWrap = document.createElement('div');
-    triggerWrap.classList.add('trigger-wrap');
+    // triggerWrap.classList.add('trigger-wrap');
 
     this.wrapper.appendChild(triggerWrap);
 
@@ -125,6 +131,8 @@ class List {
       const { target } = event;
       if (target.tagName !== 'LI') return;
       this.highlight(target);
+
+      publisher.notify('country', target.textContent.replace(/[0-9]/g, ''));
     });
   }
 
