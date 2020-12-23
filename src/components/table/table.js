@@ -29,7 +29,7 @@ class Table {
     this.TableGD = new TableGlobalDeath();
     this.TableGD.render();
 
-    document.querySelector('.container').appendChild(this.wrapper);
+    document.getElementById('top').appendChild(this.wrapper);
   }
 
   render() {
